@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      li {
+        list-style: none;
+      }
+      .box {
+        width: 450px;
+        /* height: 600px; */
+        margin: auto;
+        border: 1px black solid;
+        margin-top: 50px;
+        /* background-color: antiquewhite; */
+      }
+      .bwl {
+        color: brown;
+        text-align: center;
+        font-size: 30px;
+      }
+      .bwangl {
+        width: 350px;
+        /* height: 370px; */
+        background-color: rgb(255, 255, 255);
+        border: 1px black solid;
+        margin: auto;
+        margin-top: 50px;
+      }
+      .ttjj {
+        width: 300px;
+        height: 30px;
+        font-size: 20px;
+      }
+      .dianji {
+        width: 40px;
+        height: 33px;
+      }
+      .but {
+        width: 350px;
+        height: 60px;
+        margin: auto;
+      }
+      .tton {
+        width: 83px;
+        height: 50px;
+        margin-top: 10px;
+      }
+      .an {
+        width: 20px;
+        height: 20px;
+        border: none;
+        margin-left: 50px;
+        background-color: rgb(255, 255, 255);
+      }
+    </style>
+
+    <div class="box">
+      <p class="bwl">备忘录</p>
+      <div class="bwangl">
+        <input
+          type="text"
+          placeholder="输入点击添加"
+          class="ttjj"
+          id="memo-input"
+        />
+        <button class="dianji" onclick="addMemo()">添加</button>
+        <ul id="memo-list"></ul>
+      </div>
+      <div class="but">
+        <button class="tton" onclick="showAllMemos()">全部备忘录</button>
+        <button class="tton" onclick="showPendingMemos()">待完成</button>
+        <button class="tton" onclick="showCompletedMemos()">已完成</button>
+        <button class="tton" onclick="clearAllMemos()">清空所有</button>
+      </div>
+    </div>
+
+    <script>
+      const memoInput = document.getElementById("memo-input");
+      const memoList = document.getElementById("memo-list");
+      let memos = [];
+      function addMemo() {
+        const memoText = memoInput.value;
+        if (memoText) {
+          const memo = {
+            text: memoText,
+            completed: false,
+          };
+          memos.push(memo);
+          memoInput.value = "";
+          displayMemos(memos);
+        }
+      }
+      function deleteMemo(index) {
+        memos.splice(index, 1);
+        displayMemos(memos);
+      }
+      function toggleMemo(index) {
+        memos[index].completed = !memos[index].completed;
+        displayMemos(memos);
+      }
+
+      function displayMemos(memosToShow) {
+        memoList.innerHTML = "";
+        memosToShow.forEach((memo, index) => {
+          const li = document.createElement("li");
+          if (memo.completed) {
+            li.innerHTML = `<input type="checkbox" checked onchange="toggleMemo(${index})"><del>${memo.text}</del><button class="an" onclick="deleteMemo(${index})">❌</button>`;
+          } else {
+            li.innerHTML = `<input type="checkbox" onchange="toggleMemo(${index})">${memo.text}<button class="an" onclick="deleteMemo(${index})">❌</button>`;
+          }
+          memoList.appendChild(li);
+        });
+      }
+
+      //清除
+      function clearAllMemos() {
+        memos = [];
+        displayMemos(memos);
+      }
+
+      function showAllMemos() {
+        displayMemos(memos);
+      }
+
+      function showPendingMemos() {
+        const pendingMemos = memos.filter((memo) => !memo.completed);
+        displayMemos(pendingMemos);
+      }
+
+      function showCompletedMemos() {
+        const completedMemos = memos.filter((memo) => memo.completed);
+        displayMemos(completedMemos);
+      }
+    </script>
+  </body>
+</html>
